@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "454483206103",
+    "project_id": "learnflower-8aa79",
+    "storage_bucket": "learnflower-8aa79.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:454483206103:android:7eb601bb958cc7f2cbb592",
+        "android_client_info": {
+          "package_name": "com.example.learn_flower"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "454483206103-oc13cssjs2c4cmoqu19m4bi81u1lcqsr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9YuvF5WnXylV75vCFfjLjyQsmD4HfOJQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "454483206103-oc13cssjs2c4cmoqu19m4bi81u1lcqsr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
