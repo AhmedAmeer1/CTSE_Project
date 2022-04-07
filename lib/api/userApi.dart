@@ -1,134 +1,131 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:learn_flower/api/user_model.dart';
 import 'package:timeago/timeago.dart' as timeago;
+
+import '../dialogs/custom_dialog_box.dart';
 
 class Database {
   late FirebaseFirestore firestore;
 
+  final _auth = FirebaseAuth.instance;
   initiliase() {
     firestore = FirebaseFirestore.instance;
   }
 
 
-  Future<void> createUser(String email, String description) async {
-    try {
-      await firestore.collection("feedback").add({
-        'email': email,
-        'description': description,
-        'timestamp': FieldValue.serverTimestamp()
-      });
-      print("debug : New Flower Added");
-    } catch (e) {
-      print(e);
-    }
+  //login function
+  Future<bool> signIn(String email, String password) async {
+      bool loginSuccess=false;
+        await _auth
+          .signInWithEmailAndPassword(email: email, password: password)
+          .then((uid) =>
+           {
+              loginSuccess=true,
+           }).catchError((e) {
+              loginSuccess=false;
+              });
+      return loginSuccess;
   }
 
-  Future<void> delete(String id) async {
-    try {
-      await firestore.collection("feedback").doc(id).delete();
-    } catch (e) {
-      print(e);
-    }
+
+
+  Future<bool> signUp(String name, String number, String email, String password) async {
+    bool loginSuccess=false;
+    await _auth
+        .createUserWithEmailAndPassword(email: email, password: password)
+        .then((value) =>
+    {
+      createUser(name,number) ,
+      loginSuccess=true,
+    })
+        .catchError((e) {
+      loginSuccess=false;
+    });
+
+    return loginSuccess;
+
+
   }
 
-//view method
-  Future<Object> readUserDetails() async {
+  //creating a new user
+  createUser(String name, String number) async {
+    FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+    User? user = _auth.currentUser;
+
+    UserModel userModel = UserModel();
+
+    userModel.email = user!.email;
+    userModel.uid = user.uid;
+    userModel.firstName = name.toString();
+    userModel.phoneNumber = number.toString();
+
+    await firebaseFirestore
+        .collection("users")
+        .doc(user.uid)
+        .set( userModel.toMap());
+
+  }
+
+
+
+
+//view user details
+  Future<List> readUserDetails() async{
     QuerySnapshot querySnapshot;
     List docs = [];
-    UserModel usermodel = UserModel();
-
     try {
       querySnapshot = await firestore
           .collection('users')
-          .orderBy('timestamp', descending: true)
           .get();
       //String searchQuery = "";
-
       if (querySnapshot.docs.isNotEmpty) {
         for (var doc in querySnapshot.docs.toList()) {
           {
-            DateTime date = doc['timestamp'].toDate();
-            final timesAgo = date.subtract(new Duration(minutes: 1));
-
-
-
-            usermodel.email= doc['email'];
-            usermodel.firstName= doc['firstName'];
-            usermodel.phoneNumber= doc["phoneNumber"];
-
-
-
+            Map a = {
+              "id":doc.id,
+              "email": doc['email'],
+              "firstName": doc["firstName"],
+              "phoneNumber": doc["phoneNumber"],
+            };
+            docs.add(a);
           }
         }
-        return usermodel;
-      }
-    } catch (e) {
-      print(e);
-    }
-
-    return usermodel;
-  }
-
-
-  Future<void> update(
-      String id, String name, String description, String imageURL) async {
-    try {
-
-      print('name :  '+name);
-      await firestore
-          .collection("feedback")
-          .doc(id)
-          .update({'name': name, 'description': description, 'imageURL': imageURL});
-    } catch (e) {
-      print(e);
-    }
-
-
-}
-
-
-
-//view method
-  Future<List> readSpecificUser(String Email) async {
-    QuerySnapshot querySnapshot;
-    List docs = [];
-    try {
-      querySnapshot = await firestore
-          .collection('users')
-          .orderBy('timestamp', descending: true)
-          .get();
-      //String searchQuery = "";
-
-      if (querySnapshot.docs.isNotEmpty) {
-        for (var doc in querySnapshot.docs.toList()) {
-          {
-
-
-            DateTime date = doc['timestamp'].toDate();
-            final timesAgo = date.subtract(new Duration(minutes: 1));
-            if (Email==doc['email']) {
-              Map a = {
-                "id": doc.id,
-                "email": doc['email'],
-                "description": doc["description"],
-                "cDate": timeago.format(timesAgo)
-              };
-              docs.add(a);
-            }
-            print('2222222222');
-            }
-
-        }
-        print('1111111111');
-
         return docs;
       }
     } catch (e) {
       print(e);
     }
+
     return docs;
   }
+
+  // update user details
+  Future<void> update(String id, String firstName, String phoneNumber) async {
+    try {
+      await firestore
+          .collection("users")
+          .doc(id)
+          .update({'firstName': firstName, 'phoneNumber': phoneNumber});
+    } catch (e) {
+      print(e);
+    }
+  }
+
+
+  Future<void> delete(String id) async {
+    try {
+      await firestore.collection("Request Flower").doc(id).delete();
+    } catch (e) {
+      print(e);
+    }
+  }
+
+
 
 
 

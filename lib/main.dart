@@ -1,13 +1,13 @@
 import 'dart:ui';
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:learn_flower/pages/Admin/addFlower.dart';
+import 'package:learn_flower/pages/Flower/addFlower.dart';
 
 import 'package:learn_flower/splash_screen.dart';
 // import 'package:my_garden_app/view.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
-import 'package:learn_flower/homePage.dart';
+
 import 'package:learn_flower/splash_screen.dart';
 
 Future<void> main() async {

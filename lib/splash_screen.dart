@@ -1,7 +1,9 @@
 import 'dart:async';
-import 'package:learn_flower/homePage.dart';
+
 import 'package:flutter/material.dart';
-import 'package:learn_flower/signIn.dart';
+import 'package:learn_flower/pages/Flower/homePage.dart';
+import 'package:learn_flower/pages/User/signIn.dart';
+
 
 class Splash extends StatefulWidget {
   @override
@@ -67,7 +69,7 @@ class VideoState extends State<Splash> with SingleTickerProviderStateMixin {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               new Image.asset(
-                'assets/topimg.webp',
+                'assets/splash-logo.png',
                 width: animation.value * 250,
                 height: animation.value * 250,
               ),

@@ -70,15 +70,66 @@ class Database {
   }
 
 
-  Future<void> update(
-      String id, String name, String code, String imageURL) async {
+  Future<void> updateRequest(String id, String name, String description) async {
     try {
       await firestore
-          .collection("feedback")
+          .collection("Request Flower")
           .doc(id)
-          .update({'name': name, 'description': code, 'imageURL': imageURL});
+          .update({'FlowerName': name, 'description': description});
     } catch (e) {
       print(e);
     }
   }
+
+
+  Future<List> readUserRequestDetails(String email) async{
+    QuerySnapshot querySnapshot;
+    List docs = [];
+    try {
+      querySnapshot = await firestore
+          .collection('Request Flower')
+          .orderBy('timestamp', descending: true)
+          .get();
+      //String searchQuery = "";
+
+      if (querySnapshot.docs.isNotEmpty) {
+        for (var doc in querySnapshot.docs.toList()) {
+          {
+            DateTime date = doc['timestamp'].toDate();
+            final timesAgo = date.subtract(new Duration(minutes: 1));
+
+            if(email==doc['email']){
+
+              Map a = {
+                "id":doc.id,
+                "FlowerName": doc['FlowerName'],
+                "description": doc["description"],
+                "email": doc["email"],
+                "cDate": timeago.format(timesAgo)
+              };
+              docs.add(a);
+            }
+
+          }
+        }
+        return docs;
+      }
+
+    } catch (e) {
+      print(e);
+    }
+    return docs;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
 }

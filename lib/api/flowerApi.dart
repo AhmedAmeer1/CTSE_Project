@@ -73,6 +73,8 @@ class Database {
   Future<void> update(
       String id, String name, String code, String imageURL) async {
     try {
+      print(id);
+
       await firestore
           .collection("flowers")
           .doc(id)

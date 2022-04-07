@@ -10,9 +10,11 @@ class Database {
   }
 
 
-  Future<void> createFeedback(String email, String description) async {
+  Future<void> createFeedback(String id,String email, String description) async {
     try {
       await firestore.collection("feedback").add({
+        id:id,
+        'uid':id,
         'email': email,
         'description': description,
         'timestamp': FieldValue.serverTimestamp()
@@ -64,6 +66,8 @@ class Database {
     }
     return docs;
   }
+
+
 
 
 //   Future<void> update(
